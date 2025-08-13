@@ -1,0 +1,24 @@
+{
+  "prompt_template": "Given user query {Q_user}, metadata {M_meta}, current sub-query {sq_i}, intermediate results {R_interim}, critic feedback {fb_i}, and memory state {M_t}, select the optimal strategy from {SQL-gen, Code-gen, RAG, Memory-retrieval} to maximize answer correctness. Provide reasoning for your choice and suggest parameters for the selected strategy.",
+  "input_example": {
+    "Q_user": "List airports in California with taxi services and their annual passenger counts",
+    "M_meta": {
+      "tables": [
+        {"name": "City_Information", "rows": 1000, "columns": ["city_code", "city_name", "state"]},
+        {"name": "Ground_Service_Information", "rows": 5000, "columns": ["city_code", "airport_code", "transport_type"]},
+        {"name": "Airport_Information", "rows": 50000, "columns": ["airport_code", "airport_name", "annual_passengers"]}
+      ],
+      "relationships": [{"from": "City_Information.city_code", "to": "Ground_Service_Information.city_code"}]
+    },
+    "sq_i": "Find city_codes for cities in California",
+    "R_interim": [{"city_code": "LAX", "city_name": "Los Angeles"}],
+    "fb_i": {"confidence": 0.6, "error": "Incomplete join with transport_type"},
+    "M_t": {"past_strategy": "SQL-gen", "success_rate": 0.8}
+  },
+  "output_example": {
+    "strategy": "RAG",
+    "reasoning": "The query requires multi-table joins and large-scale data (Airport_Information > 50k rows), exceeding LLM context limits. RAG retrieves relevant schema and samples to reduce input size.",
+    "parameters": {"sim_threshold": 0.7, "sample_size": 100}
+  },
+  "design_rationale": "The prompt enables dynamic strategy selection by integrating query complexity, table scale, and feedback, mimicking human metacognitive planning (Section 3.1). It uses structured input to ensure LLM understands the context and feedback-driven adaptation."
+}

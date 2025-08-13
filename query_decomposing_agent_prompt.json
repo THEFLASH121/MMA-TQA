@@ -1,0 +1,22 @@
+{
+  "prompt_template": "Given user query {Q_user} and metadata {M_meta}, decompose the query into a set of simpler sub-queries {SQ} = {sq_1, sq_2, ..., sq_k}. Optionally apply Step-Back Abstraction to generalize the query intent. Ensure sub-queries are complete and sound, covering all query aspects.",
+  "input_example": {
+    "Q_user": "What are the names of airports with over 10 million passengers in California cities with taxi service?",
+    "M_meta": {
+      "tables": [
+        {"name": "City_Information", "columns": ["city_code", "city_name", "state"]},
+        {"name": "Ground_Service_Information", "columns": ["city_code", "airport_code", "transport_type"]},
+        {"name": "Airport_Information", "columns": ["airport_code", "airport_name", "annual_passengers"]}
+      ]
+    }
+  },
+  "output_example": {
+    "step_back": "Identify airports in California with specific services and high passenger traffic",
+    "SQ": [
+      {"sq_1": "Find city_codes for cities in California", "FOL": "∃cn(Table1(ci, cn, 'California'))"},
+      {"sq_2": "Find city_codes from sq_1 with taxi service", "FOL": "∃ac(cj ∈ {ci} ∧ Table2(cj, ac, 'taxi'))"},
+      {"sq_3": "Find airport names with >10M passengers for airport_codes from sq_2", "FOL": "∃ac, p(Table2(cj, ac, 'taxi') ∧ Table3(ac, a, p) ∧ p > 10000000)"}
+    ]
+  },
+  "design_rationale": "The prompt supports modular reasoning by breaking complex queries into atomic sub-queries, with optional abstraction to capture intent, validated by Critic Agent (Section 3.3)."
+}

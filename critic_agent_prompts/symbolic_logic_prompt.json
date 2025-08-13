@@ -1,0 +1,16 @@
+{
+  "prompt_template": "Given user query {Q_user}, decomposed sub-queries {SQ}, and metadata {M_meta}, verify the completeness (∀t G(t) ⇒ P(t)) and soundness (∀t P(t) ⇒ G(t)) of the decomposition using FOL. Output logical equivalence or specific errors.",
+  "input_example": {
+    "Q_user": "What types of ground transportation are available in Denver?",
+    "SQ": [
+      {"sq_1": "Find city_code for Denver", "FOL": "∃s(Table1(c1, 'Denver', s))"},
+      {"sq_2": "Find transport_types for city_code from sq_1", "FOL": "∃a(Table2(c1, a, t))"}
+    ],
+    "M_meta": {"tables": ["City_Information", "Ground_Service_Information"]}
+  },
+  "output_example": {
+    "result": "Logical equivalence holds",
+    "details": "∀t (G(t) ⇔ P(t)) verified via SMT solver (Z3). No counterexamples found."
+  },
+  "design_rationale": "The prompt uses FOL to ensure decomposition covers all query aspects without extraneous results, leveraging SMT solvers (Section 3.5.1)."
+}

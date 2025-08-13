@@ -1,0 +1,13 @@
+{
+  "prompt_template": "Given sub-query {sq_k} and metadata {M_retrieved}, generate Python code to process the query, using libraries like pandas for data manipulation or external APIs if needed. Execute in a sandboxed environment.",
+  "input_example": {
+    "sq_k": "Compute a risk score for airports in California with taxi services, weighting passengers (0.7) and transport options (0.3), and rank with exponential decay",
+    "M_retrieved": {
+      "S_rel": {"City_Information": ["city_code", "state"], "Ground_Service_Information": ["city_code", "airport_code", "transport_type"], "Airport_Information": ["airport_code", "airport_name", "annual_passengers"]}
+    }
+  },
+  "output_example": {
+    "code": "import pandas as pd\n# Assume df from joins\ndf = df[df['state'] == 'California'][df['transport_type'] == 'taxi']\ndf['risk_score'] = 0.7 * df['annual_passengers'] / 1e6 + 0.3 * df['transport_type'].apply(lambda x: 1 if x == 'taxi' else 0)\ndf['decay_rank'] = df['risk_score'] * np.exp(-df['risk_score'] / 10)\nreturn df.sort_values('decay_rank', ascending=False).head(3)[['airport_name', 'decay_rank']]"
+  },
+  "design_rationale": "The prompt generates Python code for procedural logic or non-relational tasks, enabling flexibility beyond SQL (Section 3.4.4)."
+}

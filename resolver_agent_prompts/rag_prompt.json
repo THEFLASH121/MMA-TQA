@@ -1,0 +1,17 @@
+{
+  "prompt_template": "Given sub-query {sq_k} and retrieved metadata {M_retrieved} (including schema snippets {S_rel}, column semantics {Sem_col}, data samples {D_samp}, relationships {R_rel}), generate an answer or code snippet using only the provided context.",
+  "input_example": {
+    "sq_k": "List airports in California with taxi services",
+    "M_retrieved": {
+      "S_rel": {"City_Information": ["city_code", "state"], "Ground_Service_Information": ["city_code", "airport_code", "transport_type"]},
+      "Sem_col": {"state": "geographic region", "transport_type": "transport mode"},
+      "D_samp": [{"city_code": "LAX", "state": "California", "airport_code": "LAX", "transport_type": "taxi"}],
+      "R_rel": [{"from": "City_Information.city_code", "to": "Ground_Service_Information.city_code"}]
+    }
+  },
+  "output_example": {
+    "answer": "LAX",
+    "code": "SELECT airport_code FROM Ground_Service_Information WHERE city_code IN (SELECT city_code FROM City_Information WHERE state = 'California') AND transport_type = 'taxi'"
+  },
+  "design_rationale": "The prompt leverages retrieved metadata to handle large-scale tables (>10k rows), reducing context size while ensuring factual grounding (Section 3.4.2)."
+}

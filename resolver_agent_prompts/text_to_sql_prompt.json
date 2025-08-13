@@ -1,0 +1,14 @@
+{
+  "prompt_template": "Given sub-query {sq_k} and metadata {M_retrieved}, generate an optimized SQL query to execute on database {D}. Apply predicate pushdown, join order optimization, and condition simplification if applicable.",
+  "input_example": {
+    "sq_k": "Find airport names with >10M passengers in California",
+    "M_retrieved": {
+      "S_rel": {"City_Information": ["city_code", "state"], "Airport_Information": ["airport_code", "airport_name", "annual_passengers"]},
+      "R_rel": [{"from": "City_Information.city_code", "to": "Airport_Information.airport_code"}]
+    }
+  },
+  "output_example": {
+    "sql": "SELECT a.airport_name FROM Airport_Information a JOIN City_Information c ON a.airport_code = c.city_code WHERE c.state = 'California' AND a.annual_passengers > 10000000"
+  },
+  "design_rationale": "The prompt generates efficient SQL for relational operations, leveraging metadata to optimize joins and filters (Section 3.4.3)."
+}

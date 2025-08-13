@@ -1,0 +1,13 @@
+{
+  "prompt_template": "Given user query {Q_user}, answer {A}, and database context {D_context}, evaluate semantic alignment, factual correctness, and completeness. Output a score (0-1) and feedback on any issues.",
+  "input_example": {
+    "Q_user": "List airports in California with taxi services",
+    "A": ["LAX"],
+    "D_context": {"tables": ["City_Information", "Ground_Service_Information"], "samples": [{"airport_code": "LAX", "transport_type": "taxi"}]}
+  },
+  "output_example": {
+    "score": 0.9,
+    "feedback": "Answer is semantically aligned and factually correct but incomplete; missing other airports like SFO with taxi services."
+  },
+  "design_rationale": "The prompt quantifies answer quality using a weighted scoring function (semantic alignment, factual correctness, completeness), guiding iterative refinement (Section 3.5.3)."
+}

@@ -1,0 +1,12 @@
+{
+  "prompt_template": "Given sub-query {sq_k}, retrieved metadata {M_retrieved}, and table content {T_content}, answer the query directly or generate a minimal code snippet to resolve it.",
+  "input_example": {
+    "sq_k": "Find city_code for Denver",
+    "M_retrieved": {"table": "City_Information", "columns": ["city_code", "city_name", "state"], "Sem_col": {"city_name": "city name"}},
+    "T_content": [{"city_code": "DEN", "city_name": "Denver", "state": "Colorado"}]
+  },
+  "output_example": {
+    "answer": "DEN"
+  },
+  "design_rationale": "The prompt is used for small tables (<1k rows) where full content fits in the LLM context, enabling quick and direct answers (Section 3.4.1)."
+}

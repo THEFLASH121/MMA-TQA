@@ -1,0 +1,13 @@
+{
+  "prompt_template": "Given code artifact {Code}, metadata {M_meta}, and sub-query {sq_k}, check for syntactic correctness, logical errors (e.g., incorrect joins, type mismatches), and inefficiencies. Suggest corrections if errors are found.",
+  "input_example": {
+    "Code": "SELECT airport_name FROM Airport_Information WHERE state = 'California'",
+    "M_meta": {"tables": [{"name": "Airport_Information", "columns": ["airport_code", "airport_name", "annual_passengers"]}]},
+    "sq_k": "Find airport names in California"
+  },
+  "output_example": {
+    "errors": ["Incorrect join: 'state' column not in Airport_Information, requires join with City_Information"],
+    "suggestion": "SELECT a.airport_name FROM Airport_Information a JOIN City_Information c ON a.airport_code = c.city_code WHERE c.state = 'California'"
+  },
+  "design_rationale": "The prompt ensures code correctness by cross-referencing metadata and query intent, reducing error propagation (Section 3.5.2)."
+}

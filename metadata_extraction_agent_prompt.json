@@ -1,0 +1,20 @@
+{
+  "prompt_template": "Given database schema {S} and user query {Q_user}, extract and augment metadata including column names, data types, relationships, and representative samples. Provide schema snippets {S_rel}, column semantics {Sem_col}, data samples {D_samp}, and inter-table relationships {R_rel}.",
+  "input_example": {
+    "S": {
+      "tables": [
+        {"name": "City_Information", "columns": [{"name": "city_code", "type": "string"}, {"name": "state", "type": "string"}]},
+        {"name": "Airport_Information", "columns": [{"name": "airport_code", "type": "string"}, {"name": "annual_passengers", "type": "int"}]}
+      ],
+      "relationships": [{"from": "City_Information.city_code", "to": "Airport_Information.airport_code"}]
+    },
+    "Q_user": "List airports in California with passenger counts"
+  },
+  "output_example": {
+    "S_rel": {"City_Information": ["city_code", "state"], "Airport_Information": ["airport_code", "annual_passengers"]},
+    "Sem_col": {"state": "geographic region", "annual_passengers": "yearly passenger count"},
+    "D_samp": [{"city_code": "LAX", "state": "California", "airport_code": "LAX", "annual_passengers": 87000000}],
+    "R_rel": [{"from": "City_Information.city_code", "to": "Airport_Information.airport_code"}]
+  },
+  "design_rationale": "The prompt guides the LLM to extract structured metadata and sample relevant rows based on query semantics, enabling efficient downstream processing (Section 3.2)."
+}

@@ -1,0 +1,20 @@
+{
+  "prompt_template": "Given query episode {E_i} = <Q_user,i, SQ_i, Plan_i, R_i, fb_i, S_ctx,i, M_perf,i>, encode into long-term memory {M_LTM} and perform batch reflection over window {W_E} to extract metamemory patterns (e.g., effective strategies, SQL rules). Output updated memory state and learned patterns.",
+  "input_example": {
+    "E_i": {
+      "Q_user": "List airports in California with taxi services",
+      "SQ_i": ["Find city_codes for California", "Find taxi services for city_codes"],
+      "Plan_i": ["SQL: SELECT city_code FROM City_Information WHERE state = 'California'", "SQL: SELECT airport_code FROM Ground_Service_Information WHERE transport_type = 'taxi'"],
+      "R_i": ["LAX"],
+      "fb_i": {"confidence": 0.9},
+      "S_ctx,i": {"tables": ["City_Information", "Ground_Service_Information"]},
+      "M_perf,i": {"accuracy": 0.9}
+    },
+    "W_E": ["E_1", "E_2", "..."]
+  },
+  "output_example": {
+    "M_LTM": {"episode_id": "E_3", "strategy": "SQL-gen", "success": true},
+    "metamemory": {"pattern": "SQL-gen effective for multi-table joins with <10k rows, use RAG for >50k rows"}
+  },
+  "design_rationale": "The prompt supports experiential learning by encoding episodes and extracting generalizable patterns, enabling adaptation to query complexity (Section 3.6)."
+}
